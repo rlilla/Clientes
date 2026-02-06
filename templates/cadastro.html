@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CADASTRO</title>
+</head>
+<body>
+    Nome:<input type="text" id="txtNome"><BR>
+    CPF:<input type="text" id="txtCPF"><BR>
+    Data Nascimento:<input type="date" id="txtData"><BR>
+    <input type="checkbox" id="segunda" name="segunda">
+    <label for="segunda">Segunda-feira</label>
+    <input type="checkbox" id="terca" name="terca">
+    <label for="terca">Terça-feira</label>
+    <input type="checkbox" id="quarta" name="quarta">
+    <label for="quarta">Quarta-feira</label>
+    <input type="checkbox" id="quinta" name="quinta">
+    <label for="quinta">Quinta-feira</label>
+    <input type="checkbox" id="sexta" name="sexta">
+    <label for="sexta">Sexta-feira</label>
+    <input type="checkbox" id="sabado" name="sabado">
+    <label for="sabado">Sábado</label>
+    <input type="checkbox" id="domingo" name="domingo">
+    <label for="domingo">Domingo</label>
+    <BR><button onclick="salvaCadastro()">Salvar</button>
+    <script>
+        
+        async function salvaCadastro(){
+            var dias = new Array(7);
+            const txtNome = document.getElementById("txtNome").value;
+            const txtCPF = document.getElementById("txtCPF").value;
+            const txtData = document.getElementById("txtData").value;
+            dias[0] = document.getElementById("segunda").checked;
+            dias[1] = document.getElementById("terca").checked;
+            dias[2] = document.getElementById("quarta").checked;
+            dias[3] = document.getElementById("quinta").checked;
+            dias[4] = document.getElementById("sexta").checked;
+            dias[5] = document.getElementById("sabado").checked;
+            dias[6] = document.getElementById("domingo").checked;
+            console.log(dias)
+            var dados={};
+            dados.txtNome = txtNome;
+            dados.txtCPF = txtCPF;
+            dados.txtData = txtData;
+            dados.diasSemana = dias;
+            const x=await(fetch('/salvaCadastro', {
+                "method": "POST",
+                "headers": {"Content-Type": "application/json"},
+                "body": JSON.stringify(dados),
+            }));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>YOLO Real-Time Detection</title> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+<style>
+body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; background: #121212; color: white; } .container { position: relative; margin-top: 20px; } video, img { border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; } #canvas { display: none; } .status { margin: 10px; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; } .online { background: #2e7d32; } 
+</style> 
+</head> 
+<body>
+<h1>YOLOv8 + Flask Camera</h1>
+<div class="status online" id="status">Conectado ao Servidor</div>
+
+<div class="container">
+    <!-- Ocultamos o vídeo original e mostramos apenas o resultado processado pelo servidor --> 
+    <video id="video" width="640" height="480" autoplay playsinline style="display:none;"></video> 
+    <img id="processedImage" width="640" height="480" src="" alt="Aguardando stream..."> 
+    <canvas id="canvas" width="640" height="480"></canvas> 
+</div>
+<button onclick="salvar()">Salvar</button>
+<script>
+    const socket = io();
+    const video = document.getElementById('video'); 
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d'); 
+    const processedImage = document.getElementById('processedImage');
+
+    // Acessa a câmera do usuário
+    navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } }) 
+    .then(stream => { video.srcObject = stream;
+    })
+    .catch(err => console.error("Erro ao acessar câmera:", err));
+
+    // Envia frames para o servidor em um intervalo
+    setInterval(() => {
+    context.drawImage(video, 0, 0, 640, 480); 
+    const data = canvas.toDataURL('image/jpeg', 0.5); // Comprime para 50% de qualidade
+    socket.emit('video_frame', data); }, 33); 
+    socket.on('response_back', (image) => { processedImage.src = image; }); 
+    function salvar() {
+        fetch('/salvar');
+    }
+</script> 
+</body> 
+</html>

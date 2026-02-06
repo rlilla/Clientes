@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>TESTE</h1><BR>
+    Endereço Camera:<input type="text" id="txtCamera"><BR>
+    <button onclick="iniciar()">Iniciar</button><BR>    
+    <button onclick="teste()">Gravar</button><BR>
+    
+    {%for arquivo in arquivos%}
+        <video src="{{url_for('static',filename=arquivo)}}" controls></video><br>
+    {%endfor%}
+    <script>
+        //const x=fetch('/teste1').then(x => x.text()).then(y => console.log(y));
+        function teste() {
+            console.log("OLA");
+            const x=fetch('/teste').then(x => x.text()).then(y => console.log(y));
+        }
+        function iniciar() {
+            const txtip = document.getElementById("txtCamera").value;
+            console.log(txtip);
+            fetch('/iniciar?ip='+txtip);
+        }
+    </script>
+</body>
+</html>
